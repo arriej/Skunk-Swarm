@@ -1,2 +1,3 @@
 # Skunk-Swarm
-A repository for working docker-compose files and app configs used on my raspberry pi swarm. 
+Skunk swarm is a collection of the for me working docker-compose files. 
+My swarm is fully build on 3 raspberry pi's and is currently a work in progress while I'm learning docker. 
