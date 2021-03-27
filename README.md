@@ -41,9 +41,9 @@ N8n | Self host IFTTT | [Hub](https://hub.docker.com/r/n8nio/n8n) - [Website](ht
 
 
 ### Todo:
-[]Standardize configs.
-[]Remove unassay information from configs
-[]Reduce workers SD cards to small ones. with 1 storage location on NAS. (and use this one location in all configs)
+[ ] Standardize configs.
+[ ] Remove unassay information from configs
+[ ] Reduce workers SD cards to small ones. with 1 storage location on NAS. (and use this one location in all configs)
 
 ##### Contributing
 
