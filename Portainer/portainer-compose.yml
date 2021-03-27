@@ -1,0 +1,58 @@
+version: '3.2'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:2.1.1
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - /var/data/portainer:/data
+    networks:
+      - internal
+      - traefik-public
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        # Enable and register in traefik
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+
+        # traefikv2
+        - traefik.http.routers.portainer.entrypoints=https
+        - traefik.http.routers.portainer-http.rule=Host(`portainer.skunkhotel.com`)
+        - traefik.http.routers.portainer-public-http.entrypoints=http
+        - traefik.http.routers.portainer-public-http.middlewares=https-redirect
+        - traefik.http.routers.portainer-https.rule=Host(`portainer.skunkhotel.com`)
+        - traefik.http.routers.portainer-https.tls=true
+        - traefik.http.services.portainer.loadbalancer.server.port=9000
+        # https-redirect middleware to redirect HTTP to HTTPS
+        # It can be re-used by other stacks in other Docker Compose files
+        - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+
+  agent:
+    image: portainer/agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - internal
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
+
+networks:
+  traefik-public:
+    external: true
+  internal:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 172.16.13.0/24

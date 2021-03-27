@@ -1,0 +1,51 @@
+# https://sudo8.com/how-to-install-wiki-js-with-traefik-2/
+version: '3.3'
+services:
+  wiki:
+    image: requarks/wiki:2
+    restart: always
+    networks:
+      - traefik-public
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+      - traefik.http.routers.wiki-http.rule=Host(`example.com`)
+      - traefik.http.routers.wiki-http.entrypoints=http
+      - traefik.http.routers.wiki-http.middlewares=https-redirect
+      - traefik.http.routers.wiki-https.rule=Host(`example.com`)
+      - traefik.http.routers.wiki-https.entrypoints=https
+      - traefik.http.routers.wiki-https.tls=true
+      - traefik.http.routers.wiki-https.tls.certresolver=le
+      - traefik.http.services.wiki.loadbalancer.server.port=3000
+    depends_on:
+      - db
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: exampleuser
+      DB_PASS: examplepass
+      DB_NAME: exampledb
+
+
+  db:
+    image: postgres:11-alpine
+    restart: always
+    networks:
+      - traefik-public
+    environment:
+      POSTGRES_DB: exampledb
+      POSTGRES_PASSWORD: examplepass
+      POSTGRES_USER: exampleuser
+    logging:
+      driver: "none"
+
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+networks:
+  traefik-public:
+    external: true
