@@ -12,19 +12,20 @@ The swarm exist out of:
 
 # Configs in this repo:
 Please note these configs are currently not functional without setting up paths before starting the stacks.
-This is a work in progress to Standardize the configs, and use uniform paths to 1 storage location
+All these configs are a work in progress while I'm trying to standardize these configs in compose version and the way they are set up.  
 
 Container | Description | Additional
 ----------|----------|----------
 Traefikv2 | Traefik reverse proxy | [Hub](https://hub.docker.com/_/traefik) - [Docs](https://docs.traefik.io/)
 Portainer | Docker Management GUI | [Hub](https://hub.docker.com/r/portainer/portainer)
-bookstack | organizing and storing information (Alternative for wiki.js) | [Hub](https://hub.docker.com/r/linuxserver/bookstack) - [Website](https://www.bookstackapp.com/)
-Wiki.js | wiki building (alternative for bookstack) | [Hub](https://hub.docker.com/r/requarks/wiki) - [Website](https://js.wiki/)
+Gitea | Selhost Github alternative | [Hub](https://hub.docker.com/r/gitea/gitea) [Website](https://gitea.io/)
 
 ## What I want to add:
 
 Container | Description | Additional
 ----------|----------|----------
+bookstack | organizing and storing information (Alternative for wiki.js) | [Hub](https://hub.docker.com/r/linuxserver/bookstack) - [Website](https://www.bookstackapp.com/)
+Wiki.js | wiki building (alternative for bookstack) | [Hub](https://hub.docker.com/r/requarks/wiki) - [Website](https://js.wiki/)
 BitWarden_rs | Password manager | [Hub](https://hub.docker.com/r/bitwardenrs/server)
 Firefly | Money manager | [Hub](https://hub.docker.com/r/jc5x/firefly-iii)
 Guacamole | Client-less remote desktop gateway | [Hub](https://hub.docker.com/r/oznu/guacamole/)
@@ -40,10 +41,12 @@ heimdall | Dashboard (maybe different one?) | [Hub](https://hub.docker.com/r/lin
 N8n | Self host IFTTT | [Hub](https://hub.docker.com/r/n8nio/n8n) - [Website](https://n8n.io/)
 
 
+
 ### Todo:
 - [ ] Standardize configs.
+- [ ] Base all configs on compose 3.8
 - [ ] Remove unassay information from configs
-- [ ] Reduce workers SD cards to small ones. with 1 storage location on NAS. (and use this one location in all configs)
+- [ ] Reduce workers SD cards to small ones. with 1 storage location on NAS. (and apply this one location in all configs)
 
 ##### Contributing
 

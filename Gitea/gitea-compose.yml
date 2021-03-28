@@ -1,7 +1,7 @@
 version: "3"
 services:
    gitea:
-    image: gitea/gitea:latest
+    image: gitea/gitea:linux-arm64
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -25,9 +25,9 @@ services:
          - traefik.http.routers.gitea.rule=Host(`git.skunkhotel.com`)
          - traefik.http.routers.gitea.tls=true
          - traefik.http.services.gitea.loadbalancer.server.port=3000
-         - traefik.http.routers.traefik-public-http.rule=Host(`git.skunkhotel.com`)
-         - traefik.http.routers.traefik-public-http.entrypoints=http
-         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
+         - traefik.http.routers.gitea-public-http.rule=Host(`git.skunkhotel.com`)
+         - traefik.http.routers.gitea-public-http.entrypoints=https
+         - traefik.http.routers.gitea-public-http.middlewares=https-redirect
          # https-redirect middleware to redirect HTTP to HTTPS
          # It can be re-used by other stacks in other Docker Compose files
          - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
@@ -35,19 +35,17 @@ services:
          - traefik.tcp.routers.gitea-ssh.entrypoints=ssh
          - traefik.tcp.routers.gitea-ssh.service=gitea-ssh-svc
          - traefik.tcp.services.gitea-ssh-svc.loadbalancer.server.port=22
+         - traefik.http.routers.gitea-public-https.tls.certresolver=le
     volumes:
-      - /home/pi/docker/gitea/gitea:/data
+      - /home/gluster/docker-data/gitea:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "3080:3080"
-      - "222:22"
     depends_on:
        - db
 
    db:
      image: postgres:9.6
-     restart: always
+     restart: on-failure
      environment:
        - POSTGRES_USER=gitea
        - POSTGRES_PASSWORD=gitea
@@ -55,7 +53,8 @@ services:
      networks:
        - gitea
      volumes:
-       - /home/pi/docker/gitea/postgres:/var/lib/postgresql/data
+       - /home/gluster/docker-data/gitea:/var/lib/postgresql/data
+
 
 networks:
   gitea:
